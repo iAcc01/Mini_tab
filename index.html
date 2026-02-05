@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini_Tab</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('miji-nav-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            if (window.innerWidth > 768) {
+                const sidebarVisible = localStorage.getItem('miji-nav-sidebar-visible');
+                if (sidebarVisible === 'false') {
+                    document.documentElement.classList.add('sidebar-hidden');
+                }
+            }
+        })();
+    </script>
+</head>
+<body>
+    <!-- 移动端头部 -->
+    <header class="miji-nav-mobile-header">
+        <button class="miji-nav-mobile-menu" id="mobileMenu" aria-label="打开菜单">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="currentColor"/></svg>
+        </button>
+        <div class="miji-nav-mobile-logo"><a href="#">Mini_Tab</a></div>
+        <button class="miji-nav-mobile-menu" id="mobilePagesMenu" aria-label="更多页面">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 3c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 14c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>
+        </button>
+    </header>
+
+    <!-- 遮罩层 -->
+    <div class="miji-nav-overlay" id="overlay"></div>
+
+    <!-- 移动端页面侧边栏 -->
+    <aside class="miji-nav-mobile-pages-sidebar" id="mobilePagesSidebar">
+        <div class="miji-nav-mobile-pages-sidebar-content">
+            <a href="#" class="miji-nav-mobile-page-item">关于</a>
+            <a href="#" class="miji-nav-mobile-page-item">主题</a>
+            <a href="#" class="miji-nav-mobile-page-item">更新</a>
+        </div>
+    </aside>
+
+    <div class="miji-nav-container">
+        <aside class="miji-nav-sidebar active">
+            <div class="miji-nav-logo"><a href="#">Mini_Tab</a></div>
+            <nav class="miji-nav-categories">
+                <a href="javascript:void(0);" class="miji-nav-category active" data-category="design">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4"/><path d="M24 44C29.5228 44 34 35.0457 34 24C34 12.9543 29.5228 4 24 4M24 44C18.4772 44 14 35.0457 14 24C14 12.9543 18.4772 4 24 4" stroke="currentColor" stroke-width="4"/><path d="M6 18H42M6 30H42" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>设计灵感</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="designtool">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 44L6 24L16 4H32L42 24L40 44H8Z" stroke="currentColor" stroke-width="4"/><path d="M24 44V31" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>设计工具</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="uikit">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="36" height="36" rx="3" stroke="currentColor" stroke-width="4"/><path d="M6 22H42M22 22V42" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>设计组件</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="standard">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 24V10C18 6.686 20.686 4 24 4C27.314 4 30 6.686 30 10V12M30 24V38C30 41.314 27.314 44 24 44C20.686 44 18 41.314 18 38V36M24 30H10C6.686 30 4 27.314 4 24C4 20.686 6.686 18 10 18H12M24 18H38C41.314 18 44 20.686 44 24C44 27.314 41.314 30 38 30H36" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>平台规范</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="icon">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>图标资源</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="color">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44C30 44 26 35 30 31C33 27.5 44 29 44 24C44 13 35 4 24 4C13 4 4 13 4 24C4 35 13 44 24 44Z" stroke="currentColor" stroke-width="4"/><circle cx="28" cy="14" r="3" fill="currentColor"/><circle cx="16" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="31" r="3" fill="currentColor"/></svg></div>
+                    <span>配色设计</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="font">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 44H38C39 44 40 43 40 42V14H30V4H10C9 4 8 5 8 6V42C8 43 9 44 10 44ZM30 4L40 14M24 22V36M18 22H30" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>字体资源</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="motion">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 6L43 25L24 27L14 44L8 6Z" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>动效设计</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="image">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="8" width="38" height="32" rx="2" stroke="currentColor" stroke-width="4"/><circle cx="15" cy="17" r="2" fill="currentColor"/><path d="M15 24L20 28L26 21L43 34V38C43 39 42 40 41 40H7C6 40 5 39 5 38V34L15 24Z" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>图片灵感</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="pic">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 22V39C44 41 42 42 41 42H9C7 42 6 41 6 39V9C6 7 7 6 9 6H24" stroke="currentColor" stroke-width="4"/><path d="M6 35L17 25C18 24 19 24 19 25L32 36M28 31L33 26C34 26 35 26 35 26L42 31M31 11L34 15L43 6" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>图片处理</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="ai">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="36" height="36" rx="3" stroke="currentColor" stroke-width="4"/><path d="M20 15L14 33M26 33L20 15M16 27H24M32 33V25M32 20V19" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>AI网站</span>
+                </a>
+                <a href="javascript:void(0);" class="miji-nav-category" data-category="knowledge">
+                    <div class="miji-nav-category-icon"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7H16C20 7 24 11 24 15V42C24 39 21 36 18 36H5V7ZM43 7H32C28 7 24 11 24 15V42C24 39 27 36 30 36H43V7Z" stroke="currentColor" stroke-width="4"/></svg></div>
+                    <span>知识整理</span>
+                </a>
+            </nav>
+        </aside>
+        <main class="miji-nav-main">
+            <div class="miji-nav-content">
+                <header class="miji-nav-topbar">
+                    <div class="miji-nav-topbar-left">
+                        <button class="miji-nav-menu-toggle" id="desktopMenu" aria-label="切换菜单">
+                            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="currentColor"/></svg>
+                        </button>
+                    </div>
+                    <nav class="miji-nav-topbar-right">
+                        <a href="#" class="miji-nav-page-link">关于</a>
+                        <a href="#" class="miji-nav-page-link">主题</a>
+                        <a href="#" class="miji-nav-page-link">更新</a>
+                    </nav>
+                </header>
+                <section class="image-entrance-container">
+                    <a href="#" class="image-entrance-item"><img src="./image/banner01.png" alt="Banner" loading="lazy"></a>
+                    <a href="#" class="image-entrance-item"><img src="./image/banner02.png" alt="Banner" loading="lazy"></a>
+                    <a href="#" class="image-entrance-item"><img src="./image/banner03.png" alt="Banner" loading="lazy"></a>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-design">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">设计灵感</h2>
+                        <div class="miji-nav-subcategories">
+                            <button class="miji-nav-subcategory active" data-subcategory="all">全部</button>
+                            <button class="miji-nav-subcategory" data-subcategory="国内">国内</button>
+                            <button class="miji-nav-subcategory" data-subcategory="国外">国外</button>
+                        </div>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-subcategory="国外" data-url="https://ui8.net/"><div class="miji-nav-card-logo"><span>U</span></div><div class="miji-nav-card-content"><h3>UI8</h3><p>高质量的UI资源市场</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国内" data-url="https://www.uisdc.com/"><div class="miji-nav-card-logo"><span>优</span></div><div class="miji-nav-card-content"><h3>优设网</h3><p>优设设计博客网站</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国外" data-url="https://www.behance.net/"><div class="miji-nav-card-logo"><span>B</span></div><div class="miji-nav-card-content"><h3>Behance</h3><p>国外设计师作品展示社区</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国外" data-url="https://dribbble.com/"><div class="miji-nav-card-logo"><span>D</span></div><div class="miji-nav-card-content"><h3>Dribbble</h3><p>全球最有影响力的设计社区</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国外" data-url="https://www.pinterest.com/"><div class="miji-nav-card-logo"><span>P</span></div><div class="miji-nav-card-content"><h3>Pinterest</h3><p>国外优质图片分享站</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国内" data-url="https://www.ui.cn/"><div class="miji-nav-card-logo"><span>U</span></div><div class="miji-nav-card-content"><h3>UI中国</h3><p>国内UI设计交流分享平台</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国内" data-url="https://www.zcool.com.cn/"><div class="miji-nav-card-logo"><span>站</span></div><div class="miji-nav-card-content"><h3>站酷</h3><p>国内最大的设计分享社区</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-subcategory="国内" data-url="https://huaban.com/"><div class="miji-nav-card-logo"><span>花</span></div><div class="miji-nav-card-content"><h3>花瓣</h3><p>设计师收集灵感图片集</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-designtool">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">设计工具</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://pixso.cn/"><div class="miji-nav-card-logo"><span>P</span></div><div class="miji-nav-card-content"><h3>Pixso</h3><p>产品设计协作一体化工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.figma.com/"><div class="miji-nav-card-logo"><span>F</span></div><div class="miji-nav-card-content"><h3>Figma</h3><p>UI设计师的首选工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://codesign.qq.com/"><div class="miji-nav-card-logo"><span>C</span></div><div class="miji-nav-card-content"><h3>Codesign</h3><p>腾讯出品的设计标注工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.gaoding.com/"><div class="miji-nav-card-logo"><span>稿</span></div><div class="miji-nav-card-content"><h3>稿定设计</h3><p>在线版PS，丰富素材资源</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.adobe.com/"><div class="miji-nav-card-logo"><span>A</span></div><div class="miji-nav-card-content"><h3>Adobe</h3><p>传统的Adobe全家桶软件</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://lanhuapp.com/"><div class="miji-nav-card-logo"><span>蓝</span></div><div class="miji-nav-card-content"><h3>蓝湖</h3><p>设计稿管理及标注工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-uikit">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">设计组件</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://design.youzan.com/"><div class="miji-nav-card-logo"><span>Z</span></div><div class="miji-nav-card-content"><h3>Zan Design</h3><p>有赞设计系统</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://semi.design/"><div class="miji-nav-card-logo"><span>S</span></div><div class="miji-nav-card-content"><h3>Semi Design</h3><p>抖音企业级UI组件库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://arco.design/"><div class="miji-nav-card-logo"><span>A</span></div><div class="miji-nav-card-content"><h3>Arco Design</h3><p>字节跳动企业级设计系统</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://element.eleme.cn/"><div class="miji-nav-card-logo"><span>E</span></div><div class="miji-nav-card-content"><h3>Element UI</h3><p>饿了么出品Vue组件库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://ant.design/"><div class="miji-nav-card-logo"><span>A</span></div><div class="miji-nav-card-content"><h3>Ant Design</h3><p>蚂蚁企业级设计系统</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://tdesign.tencent.com/"><div class="miji-nav-card-logo"><span>T</span></div><div class="miji-nav-card-content"><h3>TDesign</h3><p>腾讯企业级设计系统</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-standard">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">平台规范</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://developer.apple.com/design/"><div class="miji-nav-card-logo"><span>A</span></div><div class="miji-nav-card-content"><h3>Apple Design</h3><p>苹果人机交互设计指南</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://material.io/"><div class="miji-nav-card-logo"><span>M</span></div><div class="miji-nav-card-content"><h3>Material Design</h3><p>谷歌Material设计规范</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://design.weixin.qq.com/"><div class="miji-nav-card-logo"><span>微</span></div><div class="miji-nav-card-content"><h3>微信设计中心</h3><p>微信官方设计规范</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-icon">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">图标资源</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://www.iconfont.cn/"><div class="miji-nav-card-logo"><span>I</span></div><div class="miji-nav-card-content"><h3>Iconfont</h3><p>阿里巴巴矢量图标库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://iconpark.oceanengine.com/"><div class="miji-nav-card-logo"><span>I</span></div><div class="miji-nav-card-content"><h3>IconPark</h3><p>字节跳动图标库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://fonts.google.com/icons"><div class="miji-nav-card-logo"><span>G</span></div><div class="miji-nav-card-content"><h3>Google Fonts</h3><p>谷歌图标和字体资源</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-color">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">配色设计</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://uigradients.com/"><div class="miji-nav-card-logo"><span>U</span></div><div class="miji-nav-card-content"><h3>uiGradients</h3><p>漂亮的渐变色方案</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://coolors.co/"><div class="miji-nav-card-logo"><span>C</span></div><div class="miji-nav-card-content"><h3>Coolors</h3><p>快速配色方案生成器</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.zhongguose.com/"><div class="miji-nav-card-logo"><span>中</span></div><div class="miji-nav-card-content"><h3>中国色</h3><p>中国传统颜色</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-font">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">字体资源</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://fonts.google.com/"><div class="miji-nav-card-logo"><span>G</span></div><div class="miji-nav-card-content"><h3>Google Fonts</h3><p>谷歌免费字体库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.100font.com/"><div class="miji-nav-card-logo"><span>1</span></div><div class="miji-nav-card-content"><h3>100font</h3><p>免费商用字体下载</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-motion">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">动效设计</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://lottiefiles.com/"><div class="miji-nav-card-logo"><span>L</span></div><div class="miji-nav-card-content"><h3>LottieFiles</h3><p>Lottie动画资源库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://rive.app/"><div class="miji-nav-card-logo"><span>R</span></div><div class="miji-nav-card-content"><h3>Rive</h3><p>交互动效设计工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-image">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">图片灵感</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://unsplash.com/"><div class="miji-nav-card-logo"><span>U</span></div><div class="miji-nav-card-content"><h3>Unsplash</h3><p>免费高质量图片下载</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.pexels.com/"><div class="miji-nav-card-logo"><span>P</span></div><div class="miji-nav-card-content"><h3>Pexels</h3><p>免费素材图片和视频</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-pic">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">图片处理</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://tinypng.com/"><div class="miji-nav-card-logo"><span>T</span></div><div class="miji-nav-card-content"><h3>TinyPNG</h3><p>图片压缩工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://remove.bg/"><div class="miji-nav-card-logo"><span>R</span></div><div class="miji-nav-card-content"><h3>Remove.bg</h3><p>AI自动抠图工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-ai">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">AI网站</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://kimi.moonshot.cn/"><div class="miji-nav-card-logo"><span>K</span></div><div class="miji-nav-card-content"><h3>Kimi</h3><p>月之暗面AI助手</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://chatglm.cn/"><div class="miji-nav-card-logo"><span>智</span></div><div class="miji-nav-card-content"><h3>智谱清言</h3><p>清华智谱AI对话</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://yiyan.baidu.com/"><div class="miji-nav-card-logo"><span>文</span></div><div class="miji-nav-card-content"><h3>文心一言</h3><p>百度AI大模型</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.midjourney.com/"><div class="miji-nav-card-logo"><span>M</span></div><div class="miji-nav-card-content"><h3>Midjourney</h3><p>AI图像生成工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://openai.com/chatgpt"><div class="miji-nav-card-logo"><span>C</span></div><div class="miji-nav-card-content"><h3>ChatGPT</h3><p>OpenAI对话模型</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="miji-nav-category-content" id="category-knowledge">
+                    <div class="miji-nav-section">
+                        <h2 class="miji-nav-category-title">知识整理</h2>
+                        <div class="miji-nav-cards desktop-cols-4 mobile-cols-2">
+                            <article class="miji-nav-card" data-url="https://www.notion.so/"><div class="miji-nav-card-logo"><span>N</span></div><div class="miji-nav-card-content"><h3>Notion</h3><p>笔记和协作工具</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://obsidian.md/"><div class="miji-nav-card-logo"><span>O</span></div><div class="miji-nav-card-content"><h3>Obsidian</h3><p>本地知识库管理</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                            <article class="miji-nav-card" data-url="https://www.yuque.com/"><div class="miji-nav-card-logo"><span>语</span></div><div class="miji-nav-card-content"><h3>语雀</h3><p>阿里巴巴知识库</p></div><div class="miji-nav-card-jump"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z" fill="currentColor"/></svg></div></article>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="miji-nav-footer">
+                    <div class="miji-nav-copyright">
+                        Copyright © 2026 <a href="#">Mini_Tab</a> · Powered By MijiNav
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <div class="miji-nav-fixed-buttons">
+        <button class="miji-nav-fixed-button" id="backToTop" title="回到顶部">
+            <svg class="miji-nav-scroll-progress" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" pathLength="100"></circle></svg>
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z" fill="currentColor"/></svg>
+        </button>
+        <button class="miji-nav-fixed-button theme-toggle-btn" id="toggleTheme" title="切换主题">
+            <svg viewBox="0 0 24 24" width="20" height="20" class="theme-light"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z" fill="currentColor"/></svg>
+            <svg viewBox="0 0 24 24" width="20" height="20" class="theme-dark" style="display:none;"><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z" fill="currentColor"/></svg>
+        </button>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div class="miji-nav-confirm-overlay" id="deleteConfirmDialog">
+        <div class="miji-nav-confirm-dialog">
+            <div class="miji-nav-confirm-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" fill="currentColor"/></svg>
+            </div>
+            <h3 class="miji-nav-confirm-title">确认删除</h3>
+            <p class="miji-nav-confirm-message">你确定要删除分类 "<span class="miji-nav-confirm-category" id="deleteCategoryName"></span>" 吗？此操作将同时删除该分类下的所有内容，且无法恢复。</p>
+            <div class="miji-nav-confirm-buttons">
+                <button class="miji-nav-confirm-btn cancel" id="cancelDelete">取消</button>
+                <button class="miji-nav-confirm-btn confirm" id="confirmDelete">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 卡片编辑弹窗 -->
+    <div class="miji-nav-card-edit-overlay" id="cardEditDialog">
+        <div class="miji-nav-card-edit-dialog">
+            <h3 class="miji-nav-card-edit-title">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" fill="currentColor"/></svg>
+                编辑网站
+            </h3>
+            <form class="miji-nav-card-edit-form" id="cardEditForm">
+                <div class="miji-nav-card-edit-field">
+                    <label for="cardEditName">网站名称</label>
+                    <input type="text" id="cardEditName" placeholder="请输入网站名称" required>
+                </div>
+                <div class="miji-nav-card-edit-field">
+                    <label for="cardEditUrl">网站链接</label>
+                    <input type="url" id="cardEditUrl" placeholder="https://example.com" required>
+                </div>
+                <div class="miji-nav-card-edit-field">
+                    <label for="cardEditDesc">网站简介</label>
+                    <textarea id="cardEditDesc" placeholder="请输入网站简介" rows="2"></textarea>
+                </div>
+                <div class="miji-nav-card-edit-field">
+                    <label for="cardEditCategory">所属分组</label>
+                    <select id="cardEditCategory"></select>
+                </div>
+                <div class="miji-nav-card-edit-buttons">
+                    <button type="button" class="miji-nav-card-edit-btn cancel" id="cancelCardEdit">取消</button>
+                    <button type="submit" class="miji-nav-card-edit-btn save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 卡片删除确认弹窗 -->
+    <div class="miji-nav-card-delete-overlay" id="cardDeleteDialog">
+        <div class="miji-nav-card-delete-dialog">
+            <div class="miji-nav-card-delete-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" fill="currentColor"/></svg>
+            </div>
+            <h3 class="miji-nav-card-delete-title">确认删除</h3>
+            <p class="miji-nav-card-delete-message">你确定要删除 "<span class="miji-nav-card-delete-name" id="deleteCardName"></span>" 吗？此操作无法恢复。</p>
+            <div class="miji-nav-card-delete-buttons">
+                <button class="miji-nav-card-delete-btn cancel" id="cancelCardDelete">取消</button>
+                <button class="miji-nav-card-delete-btn confirm" id="confirmCardDelete">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1520 @@
+/* =========================================
+   MijiNav Theme - 重构优化版
+   技术栈: HTML5 + CSS3 + JavaScript
+   ========================================= */
+
+/* =========================================
+   1. CSS 变量定义
+   ========================================= */
+:root {
+    /* 尺寸变量 */
+    --content-max-width: 1400px;
+    --wide-width: 1920px;
+    --medium-width: 1400px;
+    --narrow-width: 1200px;
+    --sidebar-width: 220px;
+    --header-height: 60px;
+    --border-radius: 8px;
+    
+    /* 亮色主题颜色 */
+    --primary-color: #556aff;
+    --text-color: #333;
+    --text-color-secondary: #666;
+    --text-color-light: #999;
+    --bg-color: #fff;
+    --bg-color-secondary: #f5f7fa;
+    --border-color: #eaeaea;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --button-bg: #ffffff;
+    --button-color: #333333;
+    
+    /* 过渡动画 */
+    --transition: all 0.3s ease;
+}
+
+/* 暗色主题 */
+[data-theme="dark"] {
+    --primary-color: #3855ab;
+    --text-color: #CCCCCC;
+    --text-color-secondary: #aaa;
+    --text-color-light: #888;
+    --bg-color: #15161a;
+    --bg-color-secondary: #1f2026;
+    --border-color: #333438;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --button-bg: #2d2d2d;
+    --button-color: #ffffff;
+}
+
+/* =========================================
+   2. 基础重置
+   ========================================= */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    background: linear-gradient(135deg, #EEF4FF 0%, #EEECF4 100%);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+html[data-theme="dark"] {
+    background-image: none;
+    background-color: #15161a;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* =========================================
+   3. 布局容器
+   ========================================= */
+.miji-nav-container {
+    display: flex;
+    min-height: 100vh;
+    flex: 1;
+}
+
+/* =========================================
+   4. 侧边栏
+   ========================================= */
+.miji-nav-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-right: 2px solid rgba(255, 255, 255, 0.6);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    z-index: 100;
+    transition: left 0.3s ease, opacity 0.3s ease, visibility 0.1s ease;
+}
+
+.miji-nav-sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+[data-theme="dark"] .miji-nav-sidebar {
+    background-image: none;
+    background-color: #1a1c22;
+    border-color: #27282e;
+}
+
+/* 侧边栏隐藏状态（通过 JS 控制） */
+.miji-nav-sidebar:not(.active) {
+    left: calc(var(--sidebar-width) * -1);
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* 侧边栏显示状态 */
+.miji-nav-sidebar.active {
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Logo */
+.miji-nav-logo {
+    padding: 12px 15px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.miji-nav-logo a {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color);
+    font-family: "Georgia", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.miji-nav-logo img {
+    max-width: 160px;
+    max-height: 48px;
+}
+
+/* 侧边栏搜索 */
+.miji-nav-sidebar-search {
+    padding: 0 15px 10px 15px;
+}
+
+.miji-nav-sidebar-search input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #d1d9ec;
+    border-radius: 8px;
+    background-color: #eaeffa;
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+[data-theme="dark"] .miji-nav-sidebar-search input {
+    border-color: #292a2e;
+    background-color: #15171b;
+}
+
+/* 分类导航 */
+.miji-nav-categories {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 15px 40px 15px;
+}
+
+.miji-nav-categories::-webkit-scrollbar {
+    display: none;
+}
+
+.miji-nav-category {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    margin: 12px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-color);
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.miji-nav-category:hover,
+.miji-nav-category.active {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .miji-nav-category:hover,
+[data-theme="dark"] .miji-nav-category.active {
+    background-color: #202127;
+}
+
+.miji-nav-category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .miji-nav-category-icon svg {
+    filter: brightness(4) saturate(0);
+}
+
+.miji-nav-category span {
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+/* =========================================
+   5. 主内容区
+   ========================================= */
+.miji-nav-main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - var(--sidebar-width));
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* 侧边栏隐藏时的主内容 */
+body.sidebar-hidden .miji-nav-main {
+    margin-left: 0;
+    width: 100%;
+}
+
+.miji-nav-content {
+    padding: 20px 40px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.miji-nav-content.content-width-1600 {
+    max-width: 1600px;
+}
+
+/* =========================================
+   6. 顶栏
+   ========================================= */
+.miji-nav-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 22px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.miji-nav-topbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.miji-nav-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.miji-nav-menu-toggle:hover {
+    color: var(--primary-color);
+}
+
+.miji-nav-topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.miji-nav-pages-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.miji-nav-page-link {
+    color: var(--text-color-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.miji-nav-page-link:hover {
+    color: var(--primary-color);
+}
+
+/* =========================================
+   7. 图片入口
+   ========================================= */
+.image-entrance-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0 12px 0;
+}
+
+.image-entrance-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 40%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-entrance-item img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================
+   8. 分类内容
+   ========================================= */
+.miji-nav-category-title {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.miji-nav-category-title-text {
+    flex-shrink: 0;
+}
+
+.miji-nav-category-title-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.miji-nav-category-title:hover .miji-nav-category-title-actions {
+    opacity: 1;
+}
+
+.miji-nav-title-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--text-color-light);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.miji-nav-title-btn:hover {
+    transform: scale(1.05);
+}
+
+.miji-nav-title-btn.add-btn:hover {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.miji-nav-title-btn.export-btn:hover {
+    background-color: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9;
+}
+
+.miji-nav-title-btn.edit-btn:hover {
+    background-color: rgba(85, 106, 255, 0.1);
+    color: var(--primary-color);
+}
+
+.miji-nav-title-btn.delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* 编辑状态 */
+.miji-nav-category-title.editing .miji-nav-category-title-text {
+    display: none;
+}
+
+.miji-nav-category-title.editing .miji-nav-category-title-actions {
+    opacity: 1;
+}
+
+.miji-nav-title-edit-input {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    outline: none;
+    display: none;
+}
+
+.miji-nav-category-title.editing .miji-nav-title-edit-input {
+    display: block;
+}
+
+.miji-nav-title-btn.save-btn,
+.miji-nav-title-btn.cancel-btn {
+    display: none;
+}
+
+.miji-nav-category-title.editing .miji-nav-title-btn.edit-btn,
+.miji-nav-category-title.editing .miji-nav-title-btn.delete-btn,
+.miji-nav-category-title.editing .miji-nav-title-btn.export-btn,
+.miji-nav-category-title.editing .miji-nav-title-btn.add-btn {
+    display: none;
+}
+
+.miji-nav-category-title.editing .miji-nav-title-btn.save-btn,
+.miji-nav-category-title.editing .miji-nav-title-btn.cancel-btn {
+    display: flex;
+}
+
+.miji-nav-title-btn.save-btn:hover {
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.miji-nav-title-btn.cancel-btn:hover {
+    background-color: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
+/* 删除确认弹窗 */
+.miji-nav-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.miji-nav-confirm-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.miji-nav-confirm-dialog {
+    background-color: var(--bg-color);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+}
+
+.miji-nav-confirm-overlay.active .miji-nav-confirm-dialog {
+    transform: scale(1);
+}
+
+.miji-nav-confirm-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fef2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+[data-theme="dark"] .miji-nav-confirm-icon {
+    background-color: #451a1a;
+}
+
+.miji-nav-confirm-icon svg {
+    color: #ef4444;
+}
+
+.miji-nav-confirm-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.miji-nav-confirm-message {
+    font-size: 14px;
+    text-align: center;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.miji-nav-confirm-category {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.miji-nav-confirm-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.miji-nav-confirm-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.miji-nav-confirm-btn.cancel {
+    background-color: var(--bg-color-secondary);
+    color: var(--text-color);
+}
+
+.miji-nav-confirm-btn.cancel:hover {
+    background-color: var(--border-color);
+}
+
+.miji-nav-confirm-btn.confirm {
+    background-color: #ef4444;
+    color: white;
+}
+
+.miji-nav-confirm-btn.confirm:hover {
+    background-color: #dc2626;
+}
+
+.miji-nav-subcategories {
+    display: flex;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.miji-nav-subcategories::-webkit-scrollbar {
+    display: none;
+}
+
+.miji-nav-subcategory {
+    padding: 4px 12px;
+    margin-right: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 12px;
+    transition: var(--transition);
+}
+
+.miji-nav-subcategory:hover,
+.miji-nav-subcategory.active {
+    background-color: rgba(255, 255, 255, 1);
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .miji-nav-subcategory {
+    background-color: #202127;
+    color: #e6e6e6;
+}
+
+[data-theme="dark"] .miji-nav-subcategory:hover,
+[data-theme="dark"] .miji-nav-subcategory.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* =========================================
+   9. 卡片网格
+   ========================================= */
+.miji-nav-cards {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.miji-nav-cards.desktop-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* =========================================
+   10. 卡片样式
+   ========================================= */
+.miji-nav-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(60, 114, 139, 0.03);
+    position: relative;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    border: 1px solid #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.miji-nav-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .miji-nav-card {
+    background-color: #1f2026;
+    border-color: #333438;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .miji-nav-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.miji-nav-card-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 4px 0 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+}
+
+.miji-nav-card-logo.has-favicon {
+    background: #fff;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .miji-nav-card-logo.has-favicon {
+    background: #2a2b30;
+    border-color: #3a3b40;
+}
+
+.miji-nav-card-logo span {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+.miji-nav-card-logo img,
+.miji-nav-card-logo .miji-nav-card-favicon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.miji-nav-card-logo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-radius: 50%;
+}
+
+.miji-nav-card-content {
+    flex: 1;
+    padding: 8px;
+}
+
+.miji-nav-card-content h3,
+.miji-nav-card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+[data-theme="dark"] .miji-nav-card-content h3,
+[data-theme="dark"] .miji-nav-card-title {
+    color: #e6e6e6;
+}
+
+.miji-nav-card-content p,
+.miji-nav-card-desc {
+    color: var(--text-color-light);
+    font-size: 12px;
+    margin: 4px 0 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+}
+
+/* 卡片操作按钮区域 */
+.miji-nav-card-actions {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.miji-nav-card:hover .miji-nav-card-actions {
+    opacity: 1;
+}
+
+.miji-nav-card-action-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.miji-nav-card-action-btn:hover {
+    background-color: rgba(89, 111, 248, 0.12);
+}
+
+.miji-nav-card-action-btn.edit-btn:hover {
+    background-color: rgba(89, 111, 248, 0.15);
+}
+
+.miji-nav-card-action-btn.delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+}
+
+.miji-nav-card-action-btn.delete-btn:hover svg {
+    color: #ef4444;
+}
+
+.miji-nav-card-action-btn svg {
+    width: 14px;
+    height: 14px;
+    color: var(--text-color-light);
+}
+
+[data-theme="dark"] .miji-nav-card-action-btn {
+    background-color: rgba(31, 32, 38, 0.9);
+}
+
+[data-theme="dark"] .miji-nav-card-action-btn:hover {
+    background-color: rgba(89, 111, 248, 0.2);
+}
+
+/* 卡片编辑弹窗 */
+.miji-nav-card-edit-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.miji-nav-card-edit-overlay.active {
+    display: flex;
+}
+
+.miji-nav-card-edit-dialog {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: dialogSlideIn 0.3s ease;
+}
+
+@keyframes dialogSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+[data-theme="dark"] .miji-nav-card-edit-dialog {
+    background-color: #1f2026;
+    border: 1px solid #333438;
+}
+
+.miji-nav-card-edit-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.miji-nav-card-edit-title svg {
+    color: var(--primary-color);
+}
+
+.miji-nav-card-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.miji-nav-card-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.miji-nav-card-edit-field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+}
+
+.miji-nav-card-edit-field input,
+.miji-nav-card-edit-field textarea,
+.miji-nav-card-edit-field select {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.miji-nav-card-edit-field input:focus,
+.miji-nav-card-edit-field textarea:focus,
+.miji-nav-card-edit-field select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(85, 106, 255, 0.1);
+}
+
+.miji-nav-card-edit-field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.miji-nav-card-edit-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.miji-nav-card-edit-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.miji-nav-card-edit-btn.cancel {
+    background-color: var(--bg-color-secondary);
+    color: var(--text-color-secondary);
+}
+
+.miji-nav-card-edit-btn.cancel:hover {
+    background-color: var(--border-color);
+}
+
+.miji-nav-card-edit-btn.save {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.miji-nav-card-edit-btn.save:hover {
+    opacity: 0.9;
+}
+
+/* 卡片删除确认弹窗 */
+.miji-nav-card-delete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.miji-nav-card-delete-overlay.active {
+    display: flex;
+}
+
+.miji-nav-card-delete-dialog {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: dialogSlideIn 0.3s ease;
+}
+
+[data-theme="dark"] .miji-nav-card-delete-dialog {
+    background-color: #1f2026;
+    border: 1px solid #333438;
+}
+
+.miji-nav-card-delete-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.miji-nav-card-delete-icon svg {
+    color: #ef4444;
+}
+
+.miji-nav-card-delete-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.miji-nav-card-delete-message {
+    font-size: 14px;
+    color: var(--text-color-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.miji-nav-card-delete-name {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.miji-nav-card-delete-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.miji-nav-card-delete-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.miji-nav-card-delete-btn.cancel {
+    background-color: var(--bg-color-secondary);
+    color: var(--text-color-secondary);
+}
+
+.miji-nav-card-delete-btn.cancel:hover {
+    background-color: var(--border-color);
+}
+
+.miji-nav-card-delete-btn.confirm {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.miji-nav-card-delete-btn.confirm:hover {
+    background-color: #dc2626;
+}
+
+/* =========================================
+   11. 页脚
+   ========================================= */
+.miji-nav-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 30px;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 8px rgba(60, 114, 139, 0.03);
+    padding: 20px 30px;
+    margin: 40px 0 20px;
+    border: 1px solid #fff;
+    border-radius: 12px;
+}
+
+[data-theme="dark"] .miji-nav-footer-grid {
+    background-color: #1f2026;
+    border-color: #333438;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.miji-nav-footer-category {
+    text-align: center;
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+
+.miji-nav-footer-category-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.miji-nav-footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.miji-nav-footer-links a {
+    color: var(--text-color-secondary);
+    font-size: 14px;
+    padding: 6px 12px;
+    width: 100%;
+    transition: var(--transition);
+}
+
+.miji-nav-footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.miji-nav-copyright {
+    margin-top: auto;
+    padding: 20px 0;
+    text-align: center;
+    color: var(--text-color-secondary);
+    font-size: 14px;
+}
+
+.miji-nav-copyright a {
+    color: var(--text-color-secondary);
+}
+
+.miji-nav-copyright a:hover {
+    color: var(--text-color);
+}
+
+/* =========================================
+   12. 固定按钮
+   ========================================= */
+.miji-nav-fixed-buttons {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.miji-nav-fixed-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    color: var(--button-color);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+[data-theme="dark"] .miji-nav-fixed-button {
+    background-color: var(--bg-color-secondary);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#backToTop {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+}
+
+#backToTop.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+#backToTop:hover {
+    transform: translateY(-3px);
+}
+
+.miji-nav-scroll-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.miji-nav-scroll-progress circle {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transform-origin: center;
+}
+
+/* =========================================
+   13. 移动端头部
+   ========================================= */
+.miji-nav-mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--bg-color);
+    box-shadow: var(--card-shadow);
+    z-index: 1002;
+    padding: 0 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.miji-nav-mobile-menu {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    padding: 8px;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.miji-nav-mobile-menu:hover {
+    color: var(--primary-color);
+}
+
+.miji-nav-mobile-logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.miji-nav-mobile-logo img {
+    max-height: 48px;
+    width: auto;
+}
+
+/* 移动端页面侧边栏 */
+.miji-nav-mobile-pages-sidebar {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100vh;
+    background-color: var(--bg-color);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1100;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+}
+
+.miji-nav-mobile-pages-sidebar.active {
+    right: 0;
+}
+
+.miji-nav-mobile-pages-sidebar-content {
+    padding: 15px;
+}
+
+.miji-nav-mobile-page-item {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.miji-nav-mobile-page-item:hover,
+.miji-nav-mobile-page-item.active {
+    background-color: var(--bg-color-secondary);
+    color: var(--primary-color);
+}
+
+/* 遮罩层 */
+.miji-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1099;
+    display: none;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.miji-nav-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* =========================================
+   14. 搜索结果
+   ========================================= */
+.miji-nav-no-results {
+    text-align: center;
+    padding: 30px;
+    font-size: 16px;
+    color: var(--text-color-secondary);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+/* 搜索状态 */
+body.search-active .miji-nav-category-content[style*="display: none"] {
+    display: none;
+}
+
+/* Toast 提示 */
+.miji-nav-search-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.miji-nav-search-toast .toast-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =========================================
+   15. 主题切换图标
+   ========================================= */
+.light-logo { display: block; }
+.dark-logo { display: none; }
+
+html[data-theme="dark"] .light-logo { display: none; }
+html[data-theme="dark"] .dark-logo { display: block; }
+
+.theme-light { display: inline-block; }
+.theme-dark { display: none; }
+
+[data-theme="dark"] .theme-light { display: none; }
+[data-theme="dark"] .theme-dark { display: inline-block; }
+
+/* =========================================
+   16. Toast 提示
+   ========================================= */
+.miji-nav-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background-color: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.miji-nav-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.miji-nav-toast svg {
+    color: #22c55e;
+}
+
+/* =========================================
+   17. 响应式设计
+   ========================================= */
+
+/* 大屏幕 */
+@media screen and (max-width: 1600px) {
+    .miji-nav-cards,
+    .miji-nav-cards.desktop-cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .miji-nav-cards,
+    .miji-nav-cards.desktop-cols-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .miji-nav-cards,
+    .miji-nav-cards.desktop-cols-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .miji-nav-cards,
+    .miji-nav-cards.desktop-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 平板和移动端 */
+@media screen and (max-width: 768px) {
+    .miji-nav-mobile-header {
+        display: flex;
+    }
+    
+    .miji-nav-topbar {
+        display: none;
+    }
+    
+    .miji-nav-sidebar {
+        left: calc(var(--sidebar-width) * -1);
+        z-index: 1100;
+        margin-top: 0;
+    }
+    
+    .miji-nav-sidebar.active {
+        left: 0;
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .miji-nav-main {
+        margin-left: 0;
+        width: 100%;
+        padding-top: 60px;
+    }
+    
+    .miji-nav-content {
+        padding: 5px 15px 0 15px;
+    }
+    
+    .image-entrance-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .miji-nav-cards.desktop-cols-4,
+    .miji-nav-cards.mobile-cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .miji-nav-card {
+        padding: 12px;
+    }
+    
+    .miji-nav-card-logo {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+    
+    .miji-nav-card-title {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+    
+    .miji-nav-card-desc {
+        font-size: 11px;
+        line-height: 1.3;
+        -webkit-line-clamp: 1;
+    }
+    
+    .miji-nav-footer-grid {
+        display: none;
+    }
+    
+    .miji-nav-pages-menu {
+        display: none;
+    }
+    
+    .miji-nav-mobile-pages-menu {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .miji-nav-cards {
+        gap: 10px;
+    }
+    
+    .miji-nav-card {
+        padding: 10px;
+    }
+    
+    .miji-nav-card-logo {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        margin-right: 4px;
+    }
+    
+    .miji-nav-cards.mobile-cols-2 .miji-nav-card-desc {
+        display: none;
+    }
+}
