@@ -7,6 +7,22 @@
     'use strict';
 
     // =========================================
+    // 0. Supabase 初始化
+    // =========================================
+    const SUPABASE_URL = 'https://celluvvugcxppxlsppue.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlbGx1dnZ1Z2N4cHB4bHNwcHVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0OTkwMDgsImV4cCI6MjA4NTA3NTAwOH0.-9sVDrfE83c-agZ7x__oDGUkBaJf1P1SBxodJScneP8';
+    
+    let supabaseClient = null;
+    try {
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase initialized successfully');
+        }
+    } catch (e) {
+        console.error('Failed to initialize Supabase:', e);
+    }
+
+    // =========================================
     // 1. 配置常量
     // =========================================
     const CONFIG = {
@@ -39,7 +55,19 @@
         get backToTopBtn() { return document.getElementById('backToTop'); },
         get progressCircle() { return document.querySelector('.miji-nav-scroll-progress circle'); },
         get searchForm() { return document.getElementById('search'); },
-        get searchInput() { return document.querySelector('.miji-nav-search-input'); }
+        get searchInput() { return document.querySelector('.miji-nav-search-input'); },
+        get loginBtn() { return document.getElementById('loginBtn'); },
+        get mobileLoginBtn() { return document.getElementById('mobileLoginBtn'); },
+        get authDialog() { return document.getElementById('authDialog'); },
+        get authForm() { return document.getElementById('authForm'); },
+        get authTitle() { return document.getElementById('authTitle'); },
+        get authDesc() { return document.getElementById('authDesc'); },
+        get authEmail() { return document.getElementById('authEmail'); },
+        get authPassword() { return document.getElementById('authPassword'); },
+        get authSubmitBtn() { return document.getElementById('authSubmitBtn'); },
+        get authSwitchBtn() { return document.getElementById('authSwitchBtn'); },
+        get authSwitchText() { return document.getElementById('authSwitchText'); },
+        get closeAuth() { return document.getElementById('closeAuth'); }
     };
 
     // =========================================
@@ -1434,6 +1462,170 @@
     };
 
     // =========================================
+    // 12.1 Supabase 登录管理
+    // =========================================
+    const AuthManager = {
+        isLoginMode: true,
+
+        init() {
+            if (!supabaseClient) return;
+            this.bindEvents();
+            this.checkSession();
+        },
+
+        async checkSession() {
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (session) {
+                this.updateUI(session.user);
+            }
+        },
+
+        updateUI(user) {
+            const loginBtns = [DOM.loginBtn, DOM.mobileLoginBtn];
+            loginBtns.forEach(btn => {
+                if (btn) {
+                    if (user) {
+                        btn.textContent = user.email.split('@')[0];
+                        btn.title = '点击退出登录';
+                    } else {
+                        btn.textContent = '登录';
+                        btn.title = '';
+                    }
+                }
+            });
+        },
+
+        openDialog() {
+            if (DOM.authDialog) {
+                DOM.authDialog.classList.add('active');
+                this.setMode(true);
+            }
+        },
+
+        closeDialog() {
+            if (DOM.authDialog) {
+                DOM.authDialog.classList.remove('active');
+                DOM.authForm.reset();
+            }
+        },
+
+        setMode(isLogin) {
+            this.isLoginMode = isLogin;
+            if (!DOM.authTitle) return;
+
+            if (isLogin) {
+                DOM.authTitle.textContent = '登录';
+                DOM.authDesc.textContent = '登录以同步您的设置';
+                DOM.authSubmitBtn.textContent = '登录';
+                DOM.authSwitchText.textContent = '还没有账号？';
+                DOM.authSwitchBtn.textContent = '立即注册';
+            } else {
+                DOM.authTitle.textContent = '注册';
+                DOM.authDesc.textContent = '创建一个新账号以开始';
+                DOM.authSubmitBtn.textContent = '注册';
+                DOM.authSwitchText.textContent = '已有账号？';
+                DOM.authSwitchBtn.textContent = '立即登录';
+            }
+        },
+
+        toggleMode() {
+            this.setMode(!this.isLoginMode);
+        },
+
+        bindEvents() {
+            // 打开登录弹窗
+            [DOM.loginBtn, DOM.mobileLoginBtn].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        
+                        if (session) {
+                            if (confirm('确定要退出登录吗？')) {
+                                const { error } = await supabaseClient.auth.signOut();
+                                if (!error) {
+                                    this.updateUI(null);
+                                    CardEditManager.showToast('已退出登录');
+                                }
+                            }
+                        } else {
+                            this.openDialog();
+                        }
+                    });
+                }
+            });
+
+            // 关闭按钮
+            if (DOM.closeAuth) {
+                DOM.closeAuth.addEventListener('click', () => this.closeDialog());
+            }
+
+            // 点击遮罩层关闭
+            if (DOM.authDialog) {
+                DOM.authDialog.addEventListener('click', (e) => {
+                    if (e.target === DOM.authDialog) this.closeDialog();
+                });
+            }
+
+            // 切换模式
+            if (DOM.authSwitchBtn) {
+                DOM.authSwitchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleMode();
+                });
+            }
+
+            // 提交表单
+            if (DOM.authForm) {
+                DOM.authForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = DOM.authEmail.value;
+                    const password = DOM.authPassword.value;
+
+                    DOM.authSubmitBtn.disabled = true;
+                    DOM.authSubmitBtn.textContent = this.isLoginMode ? '登录中...' : '注册中...';
+
+                    try {
+                        if (this.isLoginMode) {
+                            // 登录
+                            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                                email,
+                                password
+                            });
+                            if (error) throw error;
+                            CardEditManager.showToast('登录成功');
+                            this.closeDialog();
+                        } else {
+                            // 注册
+                            const { data, error } = await supabaseClient.auth.signUp({
+                                email,
+                                password
+                            });
+                            if (error) throw error;
+                            CardEditManager.showToast('注册成功！请检查邮箱进行验证');
+                            this.closeDialog();
+                        }
+                    } catch (error) {
+                        CardEditManager.showToast(error.message, 'error');
+                    } finally {
+                        DOM.authSubmitBtn.disabled = false;
+                        DOM.authSubmitBtn.textContent = this.isLoginMode ? '登录' : '注册';
+                    }
+                });
+            }
+
+            // 监听状态变化
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN') {
+                    this.updateUI(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    this.updateUI(null);
+                }
+            });
+        }
+    };
+
+    // =========================================
     // 13. 初始化入口
     // =========================================
     function init() {
@@ -1448,6 +1640,7 @@
         SubcategoryFilter.init();
         ScrollHandler.init();
         CategoryTitleManager.init();
+        AuthManager.init();
 
         // 页面加载完成标记
         document.body.classList.add('page-loaded');

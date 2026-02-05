@@ -36,9 +36,7 @@
     <!-- 移动端页面侧边栏 -->
     <aside class="miji-nav-mobile-pages-sidebar" id="mobilePagesSidebar">
         <div class="miji-nav-mobile-pages-sidebar-content">
-            <a href="#" class="miji-nav-mobile-page-item">关于</a>
-            <a href="#" class="miji-nav-mobile-page-item">主题</a>
-            <a href="#" class="miji-nav-mobile-page-item">更新</a>
+            <a href="#" class="miji-nav-mobile-page-item" id="mobileLoginBtn">登录</a>
         </div>
     </aside>
 
@@ -105,9 +103,7 @@
                         </button>
                     </div>
                     <nav class="miji-nav-topbar-right">
-                        <a href="#" class="miji-nav-page-link">关于</a>
-                        <a href="#" class="miji-nav-page-link">主题</a>
-                        <a href="#" class="miji-nav-page-link">更新</a>
+                        <a href="#" class="miji-nav-page-link" id="loginBtn">登录</a>
                     </nav>
                 </header>
                 <section class="image-entrance-container">
@@ -136,6 +132,7 @@
                         </div>
                     </div>
                 </section>
+
 
                 <section class="miji-nav-category-content" id="category-designtool">
                     <div class="miji-nav-section">
@@ -344,6 +341,33 @@
         </div>
     </div>
 
+    <!-- 登录注册弹窗 -->
+    <div class="miji-nav-auth-overlay" id="authDialog">
+        <div class="miji-nav-auth-dialog">
+            <button class="miji-nav-auth-close" id="closeAuth">&times;</button>
+            <div class="miji-nav-auth-header">
+                <h3 id="authTitle">登录</h3>
+                <p id="authDesc">登录以同步您的设置</p>
+            </div>
+            <form class="miji-nav-auth-form" id="authForm">
+                <div class="miji-nav-auth-field">
+                    <label for="authEmail">邮箱</label>
+                    <input type="email" id="authEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="miji-nav-auth-field">
+                    <label for="authPassword">密码</label>
+                    <input type="password" id="authPassword" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="miji-nav-auth-submit" id="authSubmitBtn">登录</button>
+            </form>
+            <div class="miji-nav-auth-footer">
+                <span id="authSwitchText">还没有账号？</span>
+                <a href="#" id="authSwitchBtn">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
